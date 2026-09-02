@@ -1,76 +1,27 @@
----
-
 # Spotube-Revised
 
-A modular Spotify MP3 downloader with a Flask web interface, streaming downloads, and memory‑aware concurrency.
+A modular, memory‑aware Spotify MP3 downloader with a Flask web interface – because downloading playlists shouldn't crash your laptop.
 
-> ⚠️ **Important**: This project requires valid **Spotify API credentials** to fetch track metadata. It does **not** scrape MP3s directly from Spotify – you'll need to plug in a real MP3 source (e.g., `yt‑dlp` or a third‑party downloader API).
+## What the hell is this?
 
----
+I wanted a tool that scrapes Spotify playlists and downloads the MP3s without eating all my RAM. So I built this mess. It's split into three files:
 
-## Features
+- `Spotube.py` – the core scraping, downloading, and logging logic.
+- `Spo_Memory.py` – streaming downloads and concurrency control (so you don't spawn 1000 threads).
+- `Spo_Fast.py` – a simple Flask server to trigger downloads from your browser.
 
-- **Modular design** – core logic (`Spotube.py`), memory helpers (`Spo_Memory.py`), and a Flask web UI (`Spo_Fast.py`) are separated.
-- **Streaming downloads** – writes MP3 files in chunks to avoid loading entire files into RAM.
-- **Concurrency control** – a semaphore limits simultaneous downloads so you don't overwhelm your system.
-- **Logging & reporting** – automatic log files and a reporter that collects them into a single report.
-- **ZIP archiving** – package downloaded files and metadata into a compressed archive.
-- **Web interface** – a simple Flask server to trigger downloads from your browser.
+I also added a few helpers: ZIP archiving, error handlers (that I barely use), and a reporter that collects logs.
 
----
+## Does it actually work?
 
-## Setup
+**Kinda.** The downloader works – if you give it a direct MP3 link, it'll stream and save it with a semaphore to limit concurrency. But the big catch is: **Spotify doesn't give you MP3 links.** My current scraper scrapes the HTML for `<a href="...mp3">` – which doesn't exist. So by default, you get zero files.
 
-1. Clone the repository:
+You'll need to plug in a real MP3 source (e.g., `yt‑dlp`, `spotify‑downloader`, or a third‑party API) to make this actually useful. I'm working on it, but Python is kicking my ass.
+
+## How to run it
+
+1. Clone this repo:
    ```bash
    git clone https://github.com/Purrple-hub/Spotube-Revised.git
    cd Spotube-Revised
    ```
-
-2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt   # create this if you don't have one
-   ```
-   Key dependencies: `flask`, `aiohttp`, `curl_cffi`, `lxml`, `pandas`, `orjson`.
-
-3. Configure your **Spotify API credentials** in `config.txt` (or via environment variables).
-
----
-
-## Usage
-
-Run the Flask server:
-```bash
-python main.py
-```
-
-Then open `http://localhost:5000` (or the port shown) and enter a Spotify playlist URL.
-
-To use the CLI scraper directly:
-```python
-from Spotube import spotify_handling
-df, manifest = spotify_handling("https://open.spotify.com/playlist/...")
-```
-
----
-
-## What's inside
-
-- `Spotube.py` – scraping logic, downloader, data manipulation, error handlers.
-- `Spo_Memory.py` – streaming download, concurrency semaphore, memory helpers.
-- `Spo_Fast.py` – Flask web server, routes, security headers.
-- `main.py` – entry point that starts the server.
-- `templates/` – HTML templates for the web UI.
-- `config.txt` – placeholder for your API keys.
-
----
-
-## Status
-
-This is a **work in progress**. The core scraper currently expects direct MP3 links – you'll need to integrate a real MP3 source (like `yt‑dlp` or a public downloader API) to make it fully functional. Pull requests welcome!
-
----
-
-## License
-
-MIT – see [LICENSE](LICENSE).
