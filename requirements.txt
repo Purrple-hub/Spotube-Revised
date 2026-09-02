@@ -1,0 +1,5 @@
+Flask>=3.0
+orjson>=3.10
+pandas>=2.0
+spotipy>=2.24
+yt-dlp>=2025.1

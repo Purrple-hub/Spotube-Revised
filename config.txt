@@ -1,0 +1,7 @@
+# Spotify API credentials
+SPOTIFY_CLIENT_ID=your_client_id_here
+SPOTIFY_CLIENT_SECRET=your_client_secret_here
+
+# Local server settings
+SPOTUBE_HOST=127.0.0.1
+SPOTUBE_PORT=5000

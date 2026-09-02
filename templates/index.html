@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SpoTube</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --background: #f4f6f8;
+      --surface: #ffffff;
+      --text: #17202a;
+      --muted: #52606d;
+      --border: #cbd2d9;
+      --accent: #1db954;
+      --error: #a31212;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        color-scheme: dark;
+        --background: #111418;
+        --surface: #1b2026;
+        --text: #f2f4f5;
+        --muted: #b8c1ca;
+        --border: #46515c;
+        --accent: #35d96b;
+        --error: #ff8585;
+      }
+    }
+    body { font-family: system-ui, sans-serif; max-width: 760px; margin: 3rem auto; padding: 0 1rem; color: var(--text); background: var(--background); }
+    form { display: grid; gap: .75rem; max-width: 34rem; }
+    p { color: var(--muted); }
+    input, button { font: inherit; padding: .7rem; border-radius: .35rem; }
+    input { color: var(--text); background: var(--surface); border: 1px solid var(--border); }
+    button { color: #07140b; background: var(--accent); border: 0; cursor: pointer; font-weight: 700; }
+    .error { color: var(--error); }
+    li { margin: .4rem 0; }
+  </style>
+</head>
+<body>
+  <h1>SpoTube</h1>
+  <p>Download audio for tracks you are authorized to access.</p>
+  <form method="post" action="/download">
+    <label for="spotify_url">Spotify URL</label>
+    <input id="spotify_url" name="spotify_url" type="url" required placeholder="https://open.spotify.com/playlist/...">
+    <label for="output_dir">Output folder</label>
+    <input id="output_dir" name="output_dir" value="Spotube_Downloads">
+    <button type="submit">Download audio</button>
+  </form>
+  {% if error %}<p class="error">{{ error }}</p>{% endif %}
+  {% if files %}
+  <h2>Downloaded files</h2>
+  <ul>{% for file in files %}<li>{{ file.filename }} ({{ file.size_bytes }} bytes)</li>{% endfor %}</ul>
+  <p>Manifest: {{ manifest }}</p>
+  {% endif %}
+</body>
+</html>
